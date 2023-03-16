@@ -1,44 +1,47 @@
-from aiogram import Bot, Dispatcher, F
-from aiogram.filters import Command
-from aiogram.types import Message, ContentType
+import asyncio
+import logging
 
-# Вместо BOT TOKEN HERE нужно вставить токен вашего бота, полученный у @BotFather
-API_TOKEN: str = '1787669548:AAG_kbuVq-mSmhAj96C3JVTrBVxQ1KOIvIU'
+from aiogram import Bot, Dispatcher
+from config_data.config import Config, load_config
+from handlers import other_handlers, user_handlers
 
-# Создаем объекты бота и диспетчера
-bot: Bot = Bot(token=API_TOKEN)
-dp: Dispatcher = Dispatcher()
-
-
-# Этот хэндлер будет срабатывать на команду "/start"
-async def process_start_command(message: Message):
-    print(message)
-    await message.answer('Привет!\nМеня зовут Эхо-бот!\nНапиши мне что-нибудь')
+# Инициализируем логгер
+logger = logging.getLogger(__name__)
 
 
-# Этот хэндлер будет срабатывать на команду "/help"
-async def process_help_command(message: Message):
-    await message.answer('Напиши мне что-нибудь и в ответ '
-                         'я пришлю тебе твое сообщение')
+# Функция конфигурирования и запуска бота
+async def main():
+    # Конфигурируем логирование
+    logging.basicConfig(
+        level=logging.INFO,
+        format=u'%(filename)s:%(lineno)d #%(levelname)-8s '
+               u'[%(asctime)s] - %(name)s - %(message)s')
+
+    # Выводим в консоль информацию о начале запуска бота
+    logger.info('Starting bot')
+
+    # Загружаем конфиг в переменную config
+    config: Config = load_config()
+
+    # Инициализируем бот и диспетчер
+    bot: Bot = Bot(token=config.tg_bot.token, 
+                   parse_mode='HTML')
+    dp: Dispatcher = Dispatcher()
+
+    # Регистриуем роутеры в диспетчере
+    dp.include_router(user_handlers.router)
+    dp.include_router(other_handlers.router)
+
+    # Пропускаем накопившиеся апдейты и запускаем polling
+    # await bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(bot)
 
 
-# Этот хэндлер будет срабатывать на отправку боту фото
-async def send_photo_echo(message: Message):
-    await message.reply_photo(message.photo[-1].file_id)
-
-
-# Этот хэндлер будет срабатывать на любые ваши текстовые сообщения,
-# кроме команд "/start" и "/help"
-async def send_echo(message: Message):
+if __name__ == '__main__':
     try:
-        await message.send_copy(chat_id=message.chat.id)
-    except TypeError:
-        await message.reply(text='Данный тип апдейтов не поддерживается '
-                                 'методом send_copy')
-
-
-# Регистрируем хэндлеры
-dp.message.register(process_start_command, Command(commands=["start"]))
-dp.message.register(process_help_command, Command(commands=['help']))
-# dp.message.register(send_photo_echo, F.photo)
-dp.message.register(send_echo)
+        # Запускаем функцию main в асинхронном режиме
+        asyncio.run(main())
+    except (KeyboardInterrupt, SystemExit):
+        # Выводим в консоль сообщение об ошибке,
+        # если получены исключения KeyboardInterrupt или SystemExit
+        logger.error('Bot stopped!')

@@ -4,12 +4,12 @@ ANONYMOUS_ALPHABET: dict[str, Image]
 
 
 def _generate_alphabet():
-    alphabet_image = Image.open(r"art\anonymous font transparent.png")
+    alphabet_image = Image.open(r"../art/anonymous font transparent.png")
     alphabet_image.show()
     width, height = alphabet_image.size
     print(width, height)
 
-    metafile = open("art\metafile.txt", "r")
+    metafile = open("../art/metafile.txt", "r")
     s: str = metafile.read()
 
     letter_x: list[int] = []

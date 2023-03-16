@@ -1,0 +1,17 @@
+LEXICON_ENG: dict[str, str] = {
+    '/start':
+        '<b>Hello!</b>\nI will help you to create an aesthetic image from the quote.\n'
+        'Send me any text message to get your picture.\n'
+        'You should only use Latin letters.\n\n'
+        '<b>Available commands:</b>\n'
+        '/help or /start - get this text',
+    '/help':
+        '<b>Hello!</b>\nI will help you to create an aesthetic image from the quote.\n'
+        'Send me any text message to get your picture.\n'
+        'You should only use Latin letters.\n\n'
+        '<b>Available commands:</b>\n'
+        '/help or /start - get this text',
+    'invalid_message_type':
+        'Sorry, I can\'t generate quote from this message(\n'
+        'You should only use Latin letters.\n'
+}
