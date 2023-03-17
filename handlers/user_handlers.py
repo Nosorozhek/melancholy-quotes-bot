@@ -18,15 +18,17 @@ async def process_help_command(message: Message):
     await message.answer(text=LEXICON_ENG['/help'])
 
 
-available_letters: set[str] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
-                               'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8',
-                               '9', '0', '?', '!'}
+available_letters: set[str] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
+                               's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+                               '?', '!'}
 
 
 # Custom filter that checks if the message can be converted into a quote
 class CorrectMessage(BaseFilter):
     def __init__(self, available_letters: set[str]) -> None:
-        self.available_letters = available_letters
+        self.available_letters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
+                                  'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8',
+                                  '9', '0', '?', '!'}
 
     async def __call__(self, message: Message) -> bool:
         for letter in message.text:
@@ -34,8 +36,7 @@ class CorrectMessage(BaseFilter):
                 return False
         return True
 
-
-# This handler is triggered if the text can be converted into a quote
+    # This handler is triggered if the text can be converted into a quote
     @router.message(CorrectMessage(available_letters))
     async def process_help_command(message: Message):
         await message.answer(text=LEXICON_ENG['/help'])

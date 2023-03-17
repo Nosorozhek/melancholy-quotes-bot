@@ -44,11 +44,16 @@ def _generate_alphabet():
                           'question mark', 'exclamation mark']
 
     global ANONYMOUS_ALPHABET
-    ANONYMOUS_ALPHABET = {}
+    ANONYMOUS_ALPHABET: dict[str, Image] = {}
     for i in range(len(letter_images)):
         letter_images[i].save(r"art\anonymous font\letter_{}_{}.png".format(letters[int(i / 6)], i % 6))
-        ANONYMOUS_ALPHABET[letters[int(i / 6)]].append(letter_images[i])
         print(r"art\anonymous font\letter_{}_{}.png".format(letters[int(i / 6)], i % 6))
+        if letters[int(i / 6)] == 'question mark':
+            ANONYMOUS_ALPHABET['?'].append(letter_images[i])
+        if letters[int(i / 6)] == 'exclamation mark':
+            ANONYMOUS_ALPHABET['!'].append(letter_images[i])
+        else:
+            ANONYMOUS_ALPHABET[letters[int(i / 6)]].append(letter_images[i])
 
 
 _generate_alphabet()
