@@ -5,7 +5,7 @@ from lexicon.lexicon_eng import LEXICON_ENG
 router: Router = Router()
 
 
-# Хэндлер для сообщений, которые не попали в другие хэндлеры
+# Handler for messages that didn't get into other handlers
 @router.message()
 async def send_answer(message: Message):
     await message.answer(text=LEXICON_ENG['other_answer'])
