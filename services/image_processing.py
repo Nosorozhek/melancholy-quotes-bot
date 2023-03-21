@@ -11,13 +11,13 @@ class Alphabet:
 ANONYMOUS_ALPHABET: Alphabet
 
 
-def _generate_alphabet():
-    alphabet_image = Image.open(r"../art/anonymous font transparent.png")
-    alphabet_image.show()
+def _generate_alphabet() -> Alphabet:
+    alphabet_image = Image.open(r"art/anonymous font transparent.png")
+    # alphabet_image.show()
     width, height = alphabet_image.size
     print(width, height)
 
-    metafile = open("../art/metafile.txt", "r")
+    metafile = open("art/metafile.txt", "r")
     s: str = metafile.read()
 
     letter_x: list[int] = []
@@ -51,20 +51,23 @@ def _generate_alphabet():
                           't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
                           'question mark', 'exclamation mark']
 
-    global ANONYMOUS_ALPHABET
-    ANONYMOUS_ALPHABET: Alphabet = Alphabet({}, 0)
+    anonymous_alphabet: Alphabet = Alphabet({i: [] for i in letters}, 0)
+    anonymous_alphabet.letters['?'] = []
+    anonymous_alphabet.letters['!'] = []
     sum_width: int = 0
     for i in range(len(letter_images)):
         letter_images[i].save(r"art\anonymous font\letter_{}_{}.png".format(letters[int(i / 6)], i % 6))
         sum_width += letter_images[i].width
         print(r"art\anonymous font\letter_{}_{}.png".format(letters[int(i / 6)], i % 6))
         if letters[int(i / 6)] == 'question mark':
-            ANONYMOUS_ALPHABET.letters['?'].append(letter_images[i])
+            anonymous_alphabet.letters['?'].append(letter_images[i])
         if letters[int(i / 6)] == 'exclamation mark':
-            ANONYMOUS_ALPHABET.letters['!'].append(letter_images[i])
+            anonymous_alphabet.letters['!'].append(letter_images[i])
         else:
-            ANONYMOUS_ALPHABET.letters[letters[int(i / 6)]].append(letter_images[i])
-    ANONYMOUS_ALPHABET.avg_width = sum_width / len(letter_images)
+            anonymous_alphabet.letters[letters[int(i / 6)]].append(letter_images[i])
+    anonymous_alphabet.avg_width = sum_width / len(letter_images)
+    print(anonymous_alphabet.avg_width)
+    return anonymous_alphabet
 
 
-_generate_alphabet()
+ANONYMOUS_ALPHABET = _generate_alphabet()
