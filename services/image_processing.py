@@ -1,6 +1,14 @@
 from PIL import Image
+from dataclasses import dataclass
 
-ANONYMOUS_ALPHABET: dict[str, Image]
+
+@dataclass
+class Alphabet:
+    letters: dict[str, list[Image]]
+    avg_width: int
+
+
+ANONYMOUS_ALPHABET: Alphabet
 
 
 def _generate_alphabet():
@@ -44,16 +52,19 @@ def _generate_alphabet():
                           'question mark', 'exclamation mark']
 
     global ANONYMOUS_ALPHABET
-    ANONYMOUS_ALPHABET: dict[str, Image] = {}
+    ANONYMOUS_ALPHABET: Alphabet = Alphabet({}, 0)
+    sum_width: int = 0
     for i in range(len(letter_images)):
         letter_images[i].save(r"art\anonymous font\letter_{}_{}.png".format(letters[int(i / 6)], i % 6))
+        sum_width += letter_images[i].width
         print(r"art\anonymous font\letter_{}_{}.png".format(letters[int(i / 6)], i % 6))
         if letters[int(i / 6)] == 'question mark':
-            ANONYMOUS_ALPHABET['?'].append(letter_images[i])
+            ANONYMOUS_ALPHABET.letters['?'].append(letter_images[i])
         if letters[int(i / 6)] == 'exclamation mark':
-            ANONYMOUS_ALPHABET['!'].append(letter_images[i])
+            ANONYMOUS_ALPHABET.letters['!'].append(letter_images[i])
         else:
-            ANONYMOUS_ALPHABET[letters[int(i / 6)]].append(letter_images[i])
+            ANONYMOUS_ALPHABET.letters[letters[int(i / 6)]].append(letter_images[i])
+    ANONYMOUS_ALPHABET.avg_width = sum_width / len(letter_images)
 
 
 _generate_alphabet()
