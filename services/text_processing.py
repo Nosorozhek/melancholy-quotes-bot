@@ -1,18 +1,18 @@
 from random import randint
 from PIL import Image
-from services.image_processing import ANONYMOUS_ALPHABET
+from services.alphabet_generator import Alphabet, ANONYMOUS_ALPHABET
 
 MAX_LENGTH: int = 5000
 
 
 class Quote:
-    def __init__(self, text: str, alphabet: dict[str, Image] = None):
+    def __init__(self, text: str, alphabet: Alphabet = None):
         if alphabet is None:
             alphabet = ANONYMOUS_ALPHABET
         self.alphabet = alphabet
-        self.text = text
+        self.text = text + ' '
         self.quote: list[str] = []
-        self.line_size: int = 2000
+        self.line_size: int = 533
         self.split_into_lines(self.text)
         self.print()
 
@@ -25,6 +25,9 @@ class Quote:
             length += self.alphabet.avg_width
             if self.text[curr] == ' ':
                 last_end = curr
+            if self.text[curr] == '\n':
+                last_end = curr - 1
+                break
         if last_end == start:
             last_end = curr
         return self.text[start:last_end + 1], last_end - start + 1
