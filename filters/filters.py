@@ -10,7 +10,7 @@ class IsCorrectMessage(BaseFilter):
                                   '9', '0', '?', '!', ' ', '\n'}
 
     async def __call__(self, message: Message) -> bool:
-        for letter in message.text:
+        for letter in message.text.lower():
             if not (letter in self.available_letters):
                 return False
         return True

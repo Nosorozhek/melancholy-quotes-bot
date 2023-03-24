@@ -1,9 +1,10 @@
 from aiogram import Router
 from aiogram.filters import Command, CommandStart
-from aiogram.types import Message
+from aiogram.types import Message, BufferedInputFile, FSInputFile
 from lexicon.lexicon_eng import LEXICON_ENG
 
 from PIL import Image
+from time import time
 
 from filters.filters import IsCorrectMessage
 from services.text_processing import Quote
@@ -32,7 +33,14 @@ available_letters: set[str] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
 # This handler is triggered if the text can be converted into a quote
 @router.message(IsCorrectMessage(available_letters))
 async def process_help_command(message: Message):
+    t: float = time()
+    logs = open("logs.txt", "a")
     quote = Quote(message.text)
     quote_image: Image = create_quote_image(quote, None).resize((800, 533))
-    quote_image.show()
-    await message.answer('\n'.join(quote.quote))
+    # quote_image.show()
+    quote_image.save("cash/" + quote.quote[0] + ".png", "PNG")
+    # img: BufferedInputFile = BufferedInputFile(quote_image.tobytes(), "here comes .png")
+    img: FSInputFile = FSInputFile("cash/" + quote.quote[0] + ".png", quote.quote[0] + ".png")
+    logs.write("---\n" + quote.text + "\n---\n")
+    print(time() - t)
+    await message.answer_photo(img)

@@ -10,11 +10,11 @@ class Quote:
         if alphabet is None:
             alphabet = ANONYMOUS_ALPHABET
         self.alphabet = alphabet
-        self.text = text + ' '
+        self.text = text.lower() + ' '
         self.quote: list[str] = []
         self.line_size: int = 533
         self.split_into_lines(self.text)
-        self.print()
+        # self.print()
 
     def get_part_of_text(self, start: int, page_size: int) -> tuple[str, int]:
         last_end: int = start
@@ -39,6 +39,8 @@ class Quote:
             line: str
             length: int
             line, length = self.get_part_of_text(curr, self.line_size)
+            while line[len(line) - 1] == ' ':
+                line = line[:len(line) - 1]
             self.quote.append(line)
             curr += length
 
