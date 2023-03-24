@@ -9,7 +9,7 @@ def create_quote_image(quote: Quote, bg_path: str | None) -> Image:
     if bg_path is None:
         bg_path = r"art/background.png"
     quote_image: Image = Image.open(bg_path)  # .resize((4800 * 2, 3200 * 2))
-    height: float = (len(quote.quote) * 1.5 - 0.5) * quote.alphabet.max_height
+    height: float = (len(quote.quote) * 1.3 - 0.3) * quote.alphabet.max_height
     y: float = (quote_image.height - height) / 2 + quote.alphabet.max_height * 0.5
     for line in quote.quote:
         width: int = 0
@@ -31,6 +31,6 @@ def create_quote_image(quote: Quote, bg_path: str | None) -> Image:
                 x += i.width
                 i = i.resize((int(i.width * 0.9), int(i.height * 0.9)))
                 quote_image.paste(i, (left, top, left + i.width, top + i.height), i)
-        y += quote.alphabet.max_height * 1.5
+        y += quote.alphabet.max_height * 1.3
     # quote_image.resize((800, 533))
     return quote_image

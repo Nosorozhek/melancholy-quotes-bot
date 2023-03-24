@@ -47,7 +47,7 @@ def _generate_alphabet() -> Alphabet:
         bottom: int = top + letter_height[i]
         # print(left, top, right, bottom)
         letter_images.append(alphabet_image.crop((left, top, right, bottom)).resize(
-            (int((right - left) * 0.2), int((bottom - top) * 0.2))))
+            (int((right - left) * 0.18), int((bottom - top) * 0.18))))
 
     letters: list[str] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
                           't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',

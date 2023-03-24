@@ -10,7 +10,7 @@ class Quote:
         if alphabet is None:
             alphabet = ANONYMOUS_ALPHABET
         self.alphabet = alphabet
-        self.text = text.lower() + ' '
+        self.text = text.lower()
         self.quote: list[str] = []
         self.line_size: int = 533
         self.split_into_lines(self.text)

@@ -41,6 +41,6 @@ async def process_help_command(message: Message):
     quote_image.save("cash/" + quote.quote[0] + ".png", "PNG")
     # img: BufferedInputFile = BufferedInputFile(quote_image.tobytes(), "here comes .png")
     img: FSInputFile = FSInputFile("cash/" + quote.quote[0] + ".png", quote.quote[0] + ".png")
-    logs.write("---\n" + quote.text + "\n---\n")
+    logs.write(message.chat.first_name + " " + message.chat.last_name + ":\n«" + quote.text + "»\n")
     print(time() - t)
     await message.answer_photo(img)
