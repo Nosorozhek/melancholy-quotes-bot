@@ -76,3 +76,5 @@ def _generate_alphabet() -> Alphabet:
 
 
 ANONYMOUS_ALPHABET = _generate_alphabet()
+
+# TODO: upload letters from files

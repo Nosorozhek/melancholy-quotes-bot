@@ -12,7 +12,7 @@ class Quote:
         self.alphabet = alphabet
         self.text = text.lower()
         self.quote: list[str] = []
-        self.line_size: int = 533
+        self.line_size: int = 700
         self.split_into_lines(self.text)
         # self.print()
 
@@ -39,7 +39,7 @@ class Quote:
             line: str
             length: int
             line, length = self.get_part_of_text(curr, self.line_size)
-            while line[len(line) - 1] == ' ':
+            while line[len(line) - 1] == ' ' or line[len(line) - 1] == '\n':
                 line = line[:len(line) - 1]
             self.quote.append(line)
             curr += length

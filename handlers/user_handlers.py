@@ -25,6 +25,7 @@ async def process_help_command(message: Message):
     await message.answer(text=LEXICON_ENG['/help'])
 
 
+# TODO: make it a class field
 available_letters: set[str] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
                                's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
                                '?', '!', ' ', '\n'}
@@ -33,14 +34,24 @@ available_letters: set[str] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
 # This handler is triggered if the text can be converted into a quote
 @router.message(IsCorrectMessage(available_letters))
 async def process_help_command(message: Message):
-    t: float = time()
-    logs = open("logs.txt", "a")
-    quote = Quote(message.text)
-    quote_image: Image = create_quote_image(quote, None).resize((800, 533))
-    # quote_image.show()
-    quote_image.save("cash/" + quote.quote[0] + ".png", "PNG")
-    # img: BufferedInputFile = BufferedInputFile(quote_image.tobytes(), "here comes .png")
-    img: FSInputFile = FSInputFile("cash/" + quote.quote[0] + ".png", quote.quote[0] + ".png")
-    logs.write(message.chat.first_name + " " + message.chat.last_name + ":\n«" + quote.text + "»\n")
-    print(time() - t)
-    await message.answer_photo(img)
+    try:
+        t: float = time()
+        logs = open("logs.txt", "a")
+        quote = Quote(message.text)
+        quote_image: Image = create_quote_image(quote, None).resize((800, 533))
+
+        quote_image.save("cash/" + quote.quote[0] + ".png", "PNG")
+        img: FSInputFile = FSInputFile("cash/" + quote.quote[0] + ".png", quote.quote[0] + ".png")
+        if message.chat.first_name is not None and message.chat.last_name is not None:
+            logs.write(message.chat.first_name + " " + message.chat.last_name + ":\n«" + quote.text + "»\n")
+        elif message.chat.first_name is not None:
+            logs.write(message.chat.first_name + ":\n«" + quote.text + "»\n")
+        elif message.chat.last_name is not None:
+            logs.write(message.chat.last_name + ":\n«" + quote.text + "»\n")
+        else:
+            logs.write(str(message.chat.id) + ":\n«" + quote.text + "»\n")
+        print(time() - t)
+        await message.answer_photo(img)
+    except:
+        img: FSInputFile = FSInputFile("art/i'm tired, boss.jpg")
+        await message.answer_photo(img)
