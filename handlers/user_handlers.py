@@ -10,6 +10,9 @@ from filters.filters import IsCorrectMessage
 from services.text_processing import Quote
 from services.image_processing import create_quote_image
 
+import datetime
+
+
 router: Router = Router()
 
 
@@ -42,6 +45,9 @@ async def process_help_command(message: Message):
 
         quote_image.save("cash/" + quote.quote[0] + ".png", "PNG")
         img: FSInputFile = FSInputFile("cash/" + quote.quote[0] + ".png", quote.quote[0] + ".png")
+        dt = datetime.datetime.now()
+        server_time = dt.strftime("%H:%M %m/%d/%Y\n")
+        logs.write(server_time)
         if message.chat.first_name is not None and message.chat.last_name is not None:
             logs.write(message.chat.first_name + " " + message.chat.last_name + ":\n«" + quote.text + "»\n")
         elif message.chat.first_name is not None:
