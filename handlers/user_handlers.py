@@ -1,25 +1,29 @@
 from aiogram import Router
 from aiogram.filters import Command, CommandStart
-from aiogram.types import Message, BufferedInputFile, FSInputFile
-from lexicon.lexicon_eng import LEXICON_ENG
+from aiogram.methods import SendPhoto, AnswerCallbackQuery
+from aiogram.types import Message, BufferedInputFile, FSInputFile, InlineQueryResultCachedPhoto
+from aiogram.handlers import InlineQueryHandler
 
 from PIL import Image
 from time import time
-
-from filters.filters import IsCorrectMessage
-from services.text_processing import Quote
-from services.image_processing import create_quote_image
-
 import datetime
 
+from lexicon.lexicon_eng import LEXICON_ENG
+from filters.filters import IsCorrectMessage, IsCorrectInlineQuery
+from services.text_processing import Quote
+from services.image_processing import create_quote_image
+from config_data.config import Config, load_config
 
 router: Router = Router()
+
+config: Config = load_config()
 
 
 # This handler is triggered by the command /start
 @router.message(CommandStart())
 async def process_start_command(message: Message):
     await message.answer(text=LEXICON_ENG['/start'])
+    print(message.chat.id)
 
 
 # This handler is triggered by the command /help
@@ -42,22 +46,31 @@ async def process_help_command(message: Message):
         logs = open("logs.txt", "a")
         quote = Quote(message.text)
         quote_image: Image = create_quote_image(quote, None).resize((800, 533))
-
-        quote_image.save("cash/" + quote.quote[0] + ".png", "PNG")
-        img: FSInputFile = FSInputFile("cash/" + quote.quote[0] + ".png", quote.quote[0] + ".png")
+        quote_image.save("cash/" + quote.filename + ".png", "PNG")
+        img: FSInputFile = FSInputFile("cash/" + quote.filename + ".png", quote.quote[0] + ".png")
         dt = datetime.datetime.now()
         server_time = dt.strftime("%H:%M %m/%d/%Y\n")
         logs.write(server_time)
-        if message.chat.first_name is not None and message.chat.last_name is not None:
+        if message.chat.last_name is not None:
             logs.write(message.chat.first_name + " " + message.chat.last_name + ":\n«" + quote.text + "»\n")
-        elif message.chat.first_name is not None:
-            logs.write(message.chat.first_name + ":\n«" + quote.text + "»\n")
-        elif message.chat.last_name is not None:
-            logs.write(message.chat.last_name + ":\n«" + quote.text + "»\n")
         else:
-            logs.write(str(message.chat.id) + ":\n«" + quote.text + "»\n")
+            logs.write(message.chat.first_name + ":\n«" + quote.text + "»\n")
         print(time() - t)
         await message.answer_photo(img)
     except:
         img: FSInputFile = FSInputFile("art/i'm tired, boss.jpg")
         await message.answer_photo(img)
+
+
+# Inline mode
+@router.inline_query(IsCorrectInlineQuery(available_letters))
+async def handler(query: InlineQueryHandler):
+    quote = Quote(query.query)
+    quote_image: Image = create_quote_image(quote, None).resize((800, 533))
+    quote_image.save("cash/" + quote.filename + ".png", "PNG")
+    img: FSInputFile = FSInputFile("cash/" + quote.filename + ".png", quote.filename + ".png")
+    id_photo = await SendPhoto(chat_id=config.tg_bot.bot_channel_id,
+                               photo=img)
+    await AnswerCallbackQuery(callback_query_id=InlineQueryResultCachedPhoto(type='photo', id=query.from_user.id,
+                                                                             photo_file_id=id_photo.photo[
+                                                                                 0].file_id).photo_file_id)

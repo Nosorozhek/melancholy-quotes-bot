@@ -162,5 +162,7 @@
         ]
     ],
     "avg_width": 36.973684210526315,
-    "max_height": 68
+    "max_height": 68,
+    "line_height": 1.12,
+    "letter_spacing": 0.1
 }

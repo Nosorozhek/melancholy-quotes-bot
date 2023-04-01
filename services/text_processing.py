@@ -6,14 +6,15 @@ MAX_LENGTH: int = 5000
 
 
 class Quote:
-    def __init__(self, text: str, font: Font = None):
+    def __init__(self, text: str = ' ', font: Font = None):
         if font is None:
             font = ANONYMOUS_FONT
         self.font = font
         self.text = text.lower().rstrip()
         self.quote: list[str] = []
-        self.line_size: int = 700
+        self.line_size: int = 650
         self.split_into_lines(self.text)
+        self.filename = self.quote[0].replace('?', '').replace('!', ' ')
         # self.print()
 
     # A method that returns the maximum length of a string that will fit into the picture
