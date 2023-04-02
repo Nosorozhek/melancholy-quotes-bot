@@ -13,5 +13,8 @@ LEXICON_ENG: dict[str, str] = {
         '/help or /start - get this text',
     'invalid_message_type':
         'Sorry, I can\'t generate quote from this message(\n'
-        'You should only use Latin letters.\n'
+        'You should only use Latin letters',
+    'exception':
+        'Something was wrong(((\n'
+        'Try it again'
 }

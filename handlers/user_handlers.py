@@ -58,8 +58,7 @@ async def process_help_command(message: Message):
         print(time() - t)
         await message.answer_photo(img)
     except:
-        img: FSInputFile = FSInputFile("art/i'm tired, boss.jpg")
-        await message.answer_photo(img)
+        await message.answer(text=LEXICON_ENG['exception'])
 
 
 # Inline mode
