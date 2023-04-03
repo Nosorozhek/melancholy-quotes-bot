@@ -12,6 +12,7 @@ class Font:
     letter_spacing: float
 
 
+# A function that loads fonts from pictures of letters
 def load_font(name: str = "anonymous font"):
     f = open("art/{}/data.json".format(name))
     data = json.load(f)

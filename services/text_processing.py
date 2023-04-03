@@ -12,7 +12,7 @@ class Quote:
         self.font = font
         self.text = text.lower().rstrip()
         self.quote: list[str] = []
-        self.line_size: int = 650
+        self.line_size: int = 700
         self.split_into_lines(self.text)
         self.filename = self.quote[0].replace('?', '').replace('!', ' ')
         # self.print()
@@ -47,7 +47,7 @@ class Quote:
             self.quote.append(line)
             curr += length
 
-    # Method that just outputs the quote in the console
+    # A method that just outputs the quote in the python console
     def print(self):
         print("---")
         for line in self.quote:

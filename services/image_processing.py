@@ -6,7 +6,7 @@ from services.text_processing import Quote
 def create_quote_image(quote: Quote, bg_path: str | None) -> Image:
     if bg_path is None:
         bg_path = r"art/background.png"
-    quote_image: Image = Image.open(bg_path)  # .resize((4800 * 2, 3200 * 2))
+    quote_image: Image = Image.open(bg_path)
     height: float = ((len(quote.quote) - 1) * quote.font.line_height + 1) * quote.font.max_height
     y: float = (quote_image.height - height) / 2 + quote.font.max_height / 2
     for line in quote.quote:
@@ -31,5 +31,4 @@ def create_quote_image(quote: Quote, bg_path: str | None) -> Image:
                     (int(i.width * (1 - quote.font.letter_spacing)), int(i.height * (1 - quote.font.letter_spacing))))
                 quote_image.paste(i, (left, top, left + i.width, top + i.height), i)
         y += quote.font.max_height * quote.font.line_height
-    # quote_image.resize((800, 533))
     return quote_image

@@ -61,7 +61,7 @@ async def process_help_command(message: Message):
         await message.answer(text=LEXICON_ENG['exception'])
 
 
-# Inline mode
+# Inline mode handler
 @router.inline_query(IsCorrectInlineQuery(available_letters))
 async def handler(query: InlineQueryHandler):
     quote = Quote(query.query)
