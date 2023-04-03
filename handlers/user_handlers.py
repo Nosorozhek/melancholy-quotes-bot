@@ -1,7 +1,7 @@
 from aiogram import Router
 from aiogram.filters import Command, CommandStart
 from aiogram.methods import SendPhoto, AnswerCallbackQuery
-from aiogram.types import Message, BufferedInputFile, FSInputFile, InlineQueryResultCachedPhoto
+from aiogram.types import Message, FSInputFile, InlineQueryResultCachedPhoto
 from aiogram.handlers import InlineQueryHandler
 
 from PIL import Image

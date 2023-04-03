@@ -1,5 +1,3 @@
-from random import randint
-from PIL import Image
 from services.fonts import Font, ANONYMOUS_FONT
 
 MAX_LENGTH: int = 5000
