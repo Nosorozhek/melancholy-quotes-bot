@@ -1,3 +1,5 @@
+import asyncio
+
 from aiogram.filters import BaseFilter
 from aiogram.types import Message, InlineQuery
 
@@ -30,7 +32,9 @@ class IsCorrectInlineQuery(BaseFilter):
             self.available_letters = available_letters
 
     async def __call__(self, query: InlineQuery) -> bool:
-        for letter in query.query.lower():
+        for letter in query.query.lower()[:-1]:
             if not (letter in self.available_letters):
                 return False
-        return True
+        if query.query[-1] == '/':
+            return True
+        return False

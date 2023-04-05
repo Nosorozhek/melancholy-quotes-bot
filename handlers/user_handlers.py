@@ -1,8 +1,11 @@
+import asyncio
+
 from aiogram import Router
 from aiogram.filters import Command, CommandStart
-from aiogram.methods import SendPhoto, AnswerCallbackQuery
-from aiogram.types import Message, FSInputFile, InlineQueryResultCachedPhoto
+from aiogram.methods import SendPhoto, AnswerCallbackQuery, AnswerInlineQuery
+from aiogram.types import Message, FSInputFile, InlineQueryResultCachedPhoto, InlineQuery
 from aiogram.handlers import InlineQueryHandler
+from aiogram.exceptions import TelegramRetryAfter
 
 from PIL import Image
 from time import time
@@ -63,13 +66,15 @@ async def process_help_command(message: Message):
 
 # Inline mode handler
 @router.inline_query(IsCorrectInlineQuery(available_letters))
-async def handler(query: InlineQueryHandler):
-    quote = Quote(query.query)
+async def handler(query: InlineQuery):
+    quote = Quote(query.query[:-1])
     quote_image: Image = create_quote_image(quote, None).resize((800, 533))
     quote_image.save("cash/" + quote.filename + ".png", "PNG")
     img: FSInputFile = FSInputFile("cash/" + quote.filename + ".png", quote.filename + ".png")
-    id_photo = await SendPhoto(chat_id=config.tg_bot.bot_channel_id,
-                               photo=img)
-    await AnswerCallbackQuery(callback_query_id=InlineQueryResultCachedPhoto(type='photo', id=query.from_user.id,
-                                                                             photo_file_id=id_photo.photo[
-                                                                                 0].file_id).photo_file_id)
+    try:
+        msg = await SendPhoto(chat_id=config.tg_bot.bot_channel_id, photo=img)
+    except TelegramRetryAfter as e:
+        await asyncio.sleep(e.retry_after)
+        msg = await SendPhoto(chat_id=config.tg_bot.bot_channel_id, photo=img)
+    results = [InlineQueryResultCachedPhoto(type='photo', id=query.from_user.id, photo_file_id=msg.photo[0].file_id)]
+    await AnswerInlineQuery(inline_query_id=query.id, results=results, cache_time=5)
