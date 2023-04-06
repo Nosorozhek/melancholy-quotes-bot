@@ -21,7 +21,7 @@ class IsCorrectMessage(BaseFilter):
         return True
 
 
-# Custom filter that checks if the message can be converted into a quote
+# Custom filter that checks if the query can be converted into a quote
 class IsCorrectInlineQuery(BaseFilter):
     def __init__(self, available_letters: set[str] | None) -> None:
         if available_letters is None:
@@ -35,6 +35,6 @@ class IsCorrectInlineQuery(BaseFilter):
         for letter in query.query.lower()[:-1]:
             if not (letter in self.available_letters):
                 return False
-        if query.query[-1] == '/':
+        if len(query.query) > 0 and query.query[-1] == '/':
             return True
         return False
