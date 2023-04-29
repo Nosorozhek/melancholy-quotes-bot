@@ -36,7 +36,7 @@ async def process_help_command(message: Message):
 # TODO: make it a class field
 available_letters: set[str] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
                                's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
-                               '?', '!', ' ', '\n'}
+                               '?', '!', '.', ' ', '\n'}
 
 
 # This handler is triggered if the text can be converted into a quote
@@ -45,9 +45,9 @@ async def process_help_command(message: Message):
     try:
         t: float = time()
         quote = Quote(message.text)
-        quote_image: Image = create_quote_image(quote, None).resize((800, 533))
+        quote_image: Image = create_quote_image(quote, None)
         quote_image.save("cash/" + quote.filename + ".png", "PNG")
-        img: FSInputFile = FSInputFile("cash/" + quote.filename + ".png", quote.quote[0] + ".png")
+        img: FSInputFile = FSInputFile("cash/" + quote.filename + ".png", quote.filename + ".png")
         print(time() - t)
         await message.answer_photo(img)
     except:

@@ -1,4 +1,4 @@
-import random
+from random import randint
 from PIL import Image
 from services.text_processing import Quote
 
@@ -17,7 +17,7 @@ def create_quote_image(quote: Quote, bg_path: str | None) -> Image:
                 letters.append(None)
                 width += quote.font.avg_width
             elif i != '\n':
-                letters.append(quote.font.letters[i][random.randint(0, len(quote.font.letters[i]) - 1)])
+                letters.append(quote.font.letters[i][randint(0, len(quote.font.letters[i]) - 1)])
                 width += letters[len(letters) - 1].width
         x: int = int((quote_image.width - width) / 2)
         for i in letters:
@@ -29,6 +29,7 @@ def create_quote_image(quote: Quote, bg_path: str | None) -> Image:
                 x += i.width
                 i = i.resize(
                     (int(i.width * (1 - quote.font.letter_spacing)), int(i.height * (1 - quote.font.letter_spacing))))
+                quote_image.paste(i, (left, top, left + i.width, top + i.height), i)
                 quote_image.paste(i, (left, top, left + i.width, top + i.height), i)
         y += quote.font.max_height * quote.font.line_height
     return quote_image

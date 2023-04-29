@@ -120,7 +120,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+deploy/.env.deploy
 .venv
 env/
 venv/
@@ -239,3 +239,5 @@ fabric.properties
 
 /font_generators/
 /deploy/
+/.env
+/art/anonymous font/

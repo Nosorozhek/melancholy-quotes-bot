@@ -13,7 +13,7 @@ class Font:
 
 
 # A function that loads fonts from pictures of letters
-def load_font(name: str = "anonymous font"):
+def load_font(name: str = "anonymous font v2"):
     f = open("art/{}/data.json".format(name))
     data = json.load(f)
     letters: dict[str, list[Image]] = {}
@@ -26,6 +26,8 @@ def load_font(name: str = "anonymous font"):
                 letters['?'].append(Image.open(r"art/{}/letters/letter_{}_{}.png".format(name, "question mark", i)))
             elif letter[0] == '!':
                 letters['!'].append(Image.open(r"art/{}/letters/letter_{}_{}.png".format(name, "exclamation mark", i)))
+            elif letter[0] == '.':
+                letters['.'].append(Image.open(r"art/{}/letters/letter_{}_{}.png".format(name, "dot", i)))
             else:
                 letters[letter[0]].append(Image.open(r"art/{}/letters/letter_{}_{}.png".format(name, letter[0], i)))
     font: Font = Font(letters, data["avg_width"], data["max_height"], data["line_height"], data["letter_spacing"])
